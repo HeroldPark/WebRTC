@@ -25,6 +25,7 @@ the WebRTC APIs, please see [webrtc.org/bugs](https://webrtc.org/support/bug-rep
 If you need support on how to implement your own WebRTC-based application, please see the
 [discuss-webrtc](https://groups.google.com/forum/#!forum/discuss-webrtc) Google Group.
 
+```
 echo "# WebRTC" >> README.md
 git init
 git add README.md
@@ -32,6 +33,7 @@ git commit -m "first commit"
 git branch -M master
 git remote add origin git@github.com:HeroldPark/WebRTC.git
 git push -u origin master
+```
 
 ### 1. 2024-10-06
     - package.json에서 별도로 webrtc 관련 module 설치는 없다.
