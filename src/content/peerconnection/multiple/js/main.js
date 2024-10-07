@@ -20,6 +20,7 @@ hangupButton.onclick = hangup;
 const video1 = document.querySelector('video#video1');
 const video2 = document.querySelector('video#video2');
 const video3 = document.querySelector('video#video3');
+const video4 = document.querySelector('video#video4'); // 새로운 video4 요소
 
 // eslint-disable-next-line prefer-const
 let preferredVideoCodecMimeType = 'video/VP8';
@@ -29,6 +30,8 @@ let pc1Local;
 let pc1Remote;
 let pc2Local;
 let pc2Remote;
+let pc3Local;  // 새로운 pc3Local 변수
+let pc3Remote; // 새로운 pc3Remote 변수
 
 const supportsSetCodecPreferences = window.RTCRtpTransceiver &&
   'setCodecPreferences' in window.RTCRtpTransceiver.prototype;
@@ -77,13 +80,21 @@ async function call() {
   pc2Remote = new RTCPeerConnection();
   pc2Remote.ontrack = e => gotRemoteStream(e, video3);
   console.log('pc2: created local and remote peer connection objects');
+
+  pc3Local = new RTCPeerConnection(); // 새로운 pc3Local 생성
+  pc3Remote = new RTCPeerConnection(); // 새로운 pc3Remote 생성
+  pc3Remote.ontrack = e => gotRemoteStream(e, video4); // video4로 스트림 전달
+  console.log('pc3: created local and remote peer connection objects');
+
   localStream.getTracks().forEach(track => {
     pc1Local.addTrack(track, localStream);
     pc2Local.addTrack(track, localStream);
+    pc3Local.addTrack(track, localStream); // pc3Local에 트랙 추가
   });
   await Promise.all([
     negotiate(pc1Local, pc1Remote),
     negotiate(pc2Local, pc2Remote),
+    negotiate(pc3Local, pc3Remote), // pc3 negotiate 추가
   ]);
 }
 
@@ -103,8 +114,11 @@ function hangup() {
   pc1Remote.close();
   pc2Local.close();
   pc2Remote.close();
+  pc3Local.close(); // pc3Local 종료
+  pc3Remote.close(); // pc3Remote 종료
   pc1Local = pc1Remote = null;
   pc2Local = pc2Remote = null;
+  pc3Local = pc3Remote = null; // pc3 변수 초기화
   hangupButton.disabled = true;
   callButton.disabled = false;
 }
